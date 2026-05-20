@@ -48,7 +48,15 @@ export default function App() {
                 remoteMediaRef.current.innerHTML = "";
                 remoteMediaRef.current.appendChild(ele);
             }
-        } 
+        }
+        else if(track.kind === Track.Kind.Audio){
+            const ele = track.attach() as HTMLAudioElement;
+            ele.muted = false;
+            // DO NOT call ele.play() — causes autoplay error
+            // DO NOT append to remoteMediaRef — it gets wiped by innerHTML = ""
+            document.body.appendChild(ele);
+        }
+
     };
     const handleTrackUnsubscribed = (
         track: RemoteTrack,
