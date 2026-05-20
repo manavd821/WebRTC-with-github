@@ -63,7 +63,7 @@ export default function App() {
     
             });
             roomRef.current = room;
-            const token_url = "https://webrtc-with-livekit.vercel.app/token?identity=Manav" + (Math.random() * 1000);
+            const token_url = "https://webrtc-with-livekit.onrender.com/token?identity=Manav" + Math.trunc(Math.random() * 1000);
     
             const res = await fetch(token_url);
             const {token , url} = await res.json();
