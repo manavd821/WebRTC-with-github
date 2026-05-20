@@ -126,6 +126,10 @@ export default function App() {
 
 
         init();
+
+        return () => {
+            roomRef.current?.disconnect(); 
+        }
     }, [])
 
     return (
