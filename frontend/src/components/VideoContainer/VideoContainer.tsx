@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
     LocalParticipant,
@@ -19,6 +19,12 @@ export default function App() {
     const roomRef = useRef<Room>(null);
     const remoteMediaRef = useRef<HTMLDivElement>(null);
     const localMediaRef = useRef<HTMLDivElement>(null);
+    const [audioStarted, setAudioStarted] = useState(false);
+
+    const startAudio = async () => {
+        await roomRef.current?.startAudio();
+        setAudioStarted(true);
+    };
 
     const handleTrackSubscribed = (
         track: RemoteTrack,
@@ -37,13 +43,7 @@ export default function App() {
                 remoteMediaRef.current.innerHTML = "";
                 remoteMediaRef.current.appendChild(ele);
             }
-        } else if(track.kind === Track.Kind.Audio){
-            const ele = track.attach() as HTMLAudioElement;
-            ele.muted = false;
-            ele.autoplay = true;
-            document.body.appendChild(ele); // audio doesn't need to be visible
-            ele.play().catch(e => console.error("Autoplay blocked:", e));
-        }
+        } 
     };
     const handleTrackUnsubscribed = (
         track: RemoteTrack,
@@ -149,6 +149,11 @@ export default function App() {
                     </div>
 
                 </div>
+                {!audioStarted && (
+                    <button onClick={startAudio} className="px-4 py-2 bg-blue-500 text-white rounded">
+                        Click to enable audio
+                    </button>
+                )}
 
                 </div>
         </>
