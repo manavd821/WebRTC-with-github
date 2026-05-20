@@ -22,7 +22,12 @@ export default function App() {
     const [audioStarted, setAudioStarted] = useState(false);
 
     const startAudio = async () => {
+        console.log("Room state:", roomRef.current?.state);
+        console.log("Can playback audio:", roomRef.current?.canPlaybackAudio);
+
         await roomRef.current?.startAudio();
+        console.log("Audio started");
+
         setAudioStarted(true);
     };
 
@@ -87,6 +92,13 @@ export default function App() {
             .on(RoomEvent.ActiveSpeakersChanged, handleActiveSpeakerChange)
             .on(RoomEvent.Disconnected, handleDisconnect)
             .on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+
+            room.on(RoomEvent.AudioPlaybackStatusChanged, () => {
+                console.log("Can playback audio:", room.canPlaybackAudio);
+                if (!room.canPlaybackAudio) {
+                    setAudioStarted(false); // show the button again
+                }
+            });
 
             await room.connect(url, token);
             console.log('connected to room', room.name);
