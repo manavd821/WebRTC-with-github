@@ -12,6 +12,7 @@ import {
   Track,
 } from "livekit-client";
 
+const identity = "Manav" + Math.trunc(Math.random() * 1000);
 
 export default function App() {
 
@@ -25,7 +26,10 @@ export default function App() {
         participant: RemoteParticipant,
     ) => {
         console.log("Recieved track from :",participant.name);
-        if(participant.identity === roomRef.current?.localParticipant.identity) return;
+        console.log("Track from:", participant.identity, "| Local:", roomRef.current?.localParticipant.identity);
+        console.log("Track kind:", track.kind);
+
+        if(participant.identity === identity) return;
 
         if(track.kind === Track.Kind.Video || track.kind === Track.Kind.Audio){
             const ele = track.attach();
@@ -63,7 +67,7 @@ export default function App() {
     
             });
             roomRef.current = room;
-            const token_url = "https://webrtc-with-livekit.onrender.com/token?identity=Manav" + Math.trunc(Math.random() * 1000);
+            const token_url = `https://webrtc-with-livekit.onrender.com/token?identity=${identity}`
     
             const res = await fetch(token_url);
             const {token , url} = await res.json();
