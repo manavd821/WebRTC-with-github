@@ -31,11 +31,18 @@ export default function App() {
 
         if(participant.identity === identity) return;
 
-        if(track.kind === Track.Kind.Video || track.kind === Track.Kind.Audio){
+        if(track.kind === Track.Kind.Video){
             const ele = track.attach();
-            if(remoteMediaRef.current)
+            if(remoteMediaRef.current){
                 remoteMediaRef.current.innerHTML = "";
-            remoteMediaRef.current?.appendChild(ele);
+                remoteMediaRef.current.appendChild(ele);
+            }
+        } else if(track.kind === Track.Kind.Audio){
+            const ele = track.attach() as HTMLAudioElement;
+            ele.muted = false;
+            ele.autoplay = true;
+            document.body.appendChild(ele); // audio doesn't need to be visible
+            ele.play().catch(e => console.error("Autoplay blocked:", e));
         }
     };
     const handleTrackUnsubscribed = (
